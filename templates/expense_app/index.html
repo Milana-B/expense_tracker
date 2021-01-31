@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% extends "expense_app/base.html" %}
+{% block body_block %}
+{% if user.is_authenticated %}
+<p class="h2 pb-2">Welcome {{ user.username }}!</p>
+<form method="POST">
+   {{form.as_p}}
+   {% csrf_token %}
+</form>
+{% if amount_sum %}
+   <p class="h4 pb-2">The monthly total expense is: {{ amount_sum }} NIS</p>
+{% else %}
+   <p class="h4 pb-2">The monthly total expense is: 0 NIS</p>
+{% endif %}
+<div class="col-md-12">
+   <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+      <div class="col p-4 d-flex flex-column position-static">
+         <h3>Last Expenses:</h3>
+         {% if expense_record %}
+         <table class="table table-success table-striped">
+            <thead>
+               <th>Date</th>
+               <th>Name</th>
+               <th>Amount</th>
+               <th>Payments</th>
+               <th>Payment Method</th>
+               <th>Expense Category</th>
+               <th>Note</th>
+               <th>Update</th>
+               <th>Remove</th>
+            </thead>
+            {% for record in expense_record %}
+            <tr>
+               <td>{{ record.date }}</td>
+               <td>{{ record.user.username }}</td>
+               <td>{{ record.amount }} NIS</td>
+               <td>{{ record.payments }}</td>
+               <td>
+                  {% if record.payment_method.all %}
+                  {% for method in record.payment_method.all %}
+                    {{ method.name }}
+                  {% endfor %}
+                  {% else %}
+                    None
+                  {% endif %}
+               </td>
+               <td>
+                  {% if record.expense_category.all %}
+                  {% for category in record.expense_category.all %}
+                  {{ category.name }}
+                  {% endfor %}
+                  {% else %}
+                    None
+                  {% endif %}
+               </td>
+               <td>{{ record.note }}</td>
+               <td><a class="btn btn-sm btn-info" href="{% url 'expense_app:update_expense_record' pk=record.pk %}">Update</a></td>
+               <td><a class="btn btn-sm btn-danger" href="{% url 'expense_app:delete_expense_record' pk=record.pk %}">Delete</a></td>
+            </tr>
+            {% endfor %}
+         </table>
+         {% else %}
+         <p>No Expense Records</p>
+         {% endif %}
+      </div>
+   </div>
+   <a class="btn btn-primary mr-3" href="{% url 'expense_app:export_expense_records_xls' %}" role="button">Export Records</a>
+</div>
+{% else %}
+<p class="h2 pb-2">Welcome to the site!</p>
+<p class="h2 pb-2">Please Login</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'expense_app/base.html' %}
+{% block body_block %}
+    <p class="h3 pb-2">Welcome!</p>
+    <p class="h4 pb-2">Please Login:</p>
+        <form method="post" action="{% url 'expense_app:user_login' %}">
+          <div class="form-group">
+          {% csrf_token %}
+          <label for="username">Username:</label>
+          <input type="text" name="username" placeholder="Username">
+          <div class="row mt-3"></div>
+          <label for="password">Password:</label>
+          <input type="password" name="password">
+          <div class="row mt-3"></div>
+          <input type="submit" name="" value="Login">
+          </div>
+        </form>
+{% endblock %}

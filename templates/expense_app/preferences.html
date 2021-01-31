@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% extends "expense_app/base.html" %}
+{% block body_block %}
+<div class="row mb-2">
+   <div class="col-md-4">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+         <div class="col p-4 d-flex flex-column position-static">
+            <p class="h3 pb-2">Payment Methods:</p>
+            {% if payment_methods_list %}
+            <table class="table table-sm table-bordered">
+               <tr>
+                  <th>Method</th>
+                  <th>Update</th>
+                  <th>Remove</th>
+               </tr>
+               {% for record in payment_methods_list %}
+               <tr>
+                  <td>{{ record.name }}</td>
+                  <td><a class="btn btn-sm btn-info" href="{% url 'expense_app:update_payment_method' pk=record.pk  %}">Update</a></td>
+                  <td><a class="btn btn-sm btn-danger" href="{% url 'expense_app:delete_payment_method' pk=record.pk %}">Delete</a></td>
+               </tr>
+               {% endfor %}
+            </table>
+            {% else %}
+            <p>No Records</p>
+            {% endif %}
+            <p class="h4 pt-4 pb-2">Add New Payment Method:</p>
+            <form action="" method="POST">
+               {% csrf_token %}
+               {{payment_method_form.as_p}}
+               <input type="submit" name="save_method" value="Add">
+            </form>
+         </div>
+      </div>
+   </div>
+   <div class="col-md-4">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+         <div class="col p-4 d-flex flex-column position-static">
+            <p class="h3 pb-2">Expense Categories:</p>
+            {% if expense_categories_list %}
+            <table class="table table-sm table-bordered">
+               <tr>
+                  <th>Category</th>
+                  <th>Update</th>
+                  <th>Remove</th>
+               </tr>
+               {% for record in expense_categories_list %}
+               <tr>
+                  <td>{{ record.name }}</td>
+                  <td><a class="btn btn-sm btn-info" href="{% url 'expense_app:update_expense_category' pk=record.pk %}">Update</a></td>
+                  <td><a class="btn btn-sm btn-danger" href="{% url 'expense_app:delete_expense_category' pk=record.pk %}">Delete</a></td>
+               </tr>
+               {% endfor %}
+            </table>
+            {% else %}
+            <p>No Records</p>
+            {% endif %}
+            <p class="h4 pt-4 pb-2">Add New Expense Category:</p>
+            <form action="/expense_app/preferences/" method="POST">
+               {% csrf_token %}
+               {{expense_category_form.as_p}}
+               <input type="submit" name="save_category" value="Add">
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

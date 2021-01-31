@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% extends "expense_app/base.html" %}
+{% block body_block %}
+<div class="row mb-2">
+   <div class="col-md-3">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+         <div class="col p-4 d-flex flex-column position-static">
+            <form action="" method="post">
+               {% csrf_token %}
+               {{ form.as_p }}
+            </form>
+         </div>
+      </div>
+   </div>
+   <div class="col-md-9">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+         <div class="col p-4 d-flex flex-column position-static">
+            {% if expense_record %}
+            <table class="table table-success table-striped">
+               <thead>
+                  <th>Date</th>
+                  <th>Name</th>
+                  <th>Amount</th>
+                  <th>Payments</th>
+                  <th>Payment Method</th>
+                  <th>Expense Category</th>
+                  <th>Note</th>
+               </thead>
+               {% for record in expense_record %}
+               <tr>
+                  <td>{{ record.date }}</td>
+                  <td>{{ record.user.username }}</td>
+                  <td>{{ record.amount }} NIS</td>
+                  <td>{{ record.payments }}</td>
+                  <td>
+                     {% for method in record.payment_method.all %}
+                        {{ method.name }}
+                     {% endfor %}
+                  </td>
+                  <td>
+                     {% for category in record.expense_category.all %}
+                        {{ category.name }}
+                     {% endfor %}
+                  </td>
+                  <td>{{ record.note }}</td>
+               </tr>
+               {% endfor %}
+            </table>
+            {% else %}
+            <p>No Matching Expense Records</p>
+            {% endif %}
+            {% if total_sum %}
+            <h5>Total: {{ total_sum }} NIS</h5>
+            {% else %}
+            <p>--</p>
+            {% endif %}
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}

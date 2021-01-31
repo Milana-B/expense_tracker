@@ -1,0 +1,29 @@
+{% extends "expense_app/base.html" %}
+{% block body_block %}
+      {% if registered %}
+        <p class="h3 pb-2">Thank you for registering!</p>
+      {% else %}
+        <p class="h4 pb-2">Register Here:</p>
+        <form method="POST">
+          {% csrf_token %}
+
+            <label for="username">Username:</label>
+          <input type="text" name="username">
+          <div class="row mt-3"></div>
+
+          <label for="email">Email address:</label>
+          <input type="email" name="email">
+          <div class="row mt-3"></div>
+
+            <label for="password">Password:</label>
+          <input type="password" name="password">
+
+            <div id="passwordHelpBlock" class="form-text">
+                Your password must be 8-20 characters long.
+        </div>
+            <div class="row mt-3"></div>
+          <input type="submit" name="" value="Register">
+
+        </form>
+      {% endif %}
+{% endblock %}

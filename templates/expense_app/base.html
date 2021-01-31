@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title>Expense Tracker</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+   </head>
+   <body>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+         <div class="container-fluid">
+            <a class="navbar-brand">Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+               {% if user.is_authenticated %}
+               <ul class="navbar-nav">
+                  <li class="nav-item">
+                     <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'expense_app:create_expense_record' %}">New Expense</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'expense_app:filter' %}">Filter</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'expense_app:preferences' %}">Preferences</a>
+                  </li>
+               </ul>
+               <ul class="navbar-nav ms-auto">
+                  <li class="nav-item my-2 my-lg-0">
+                     <a class="nav-link" href="{% url 'expense_app:logout' %}">Logout</a>
+                  </li>
+               </ul>
+               {% else %}
+               <ul class="navbar-nav">
+                  <li class="nav-item">
+                     <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Login</a>
+                  </li>
+               </ul>
+               <ul class="navbar-nav ms-auto">
+                  <li class="nav-item my-2 my-lg-0">
+                     <a class="nav-link" href="{% url 'expense_app:register' %}">Register</a>
+                  </li>
+               </ul>
+               {% endif %}
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <div class="container-fluid pt-4">
+         {% block body_block %}
+         {# Anything outside of this will be inherited if you use extend.#}
+         {% endblock %}
+         <footer class="pt-4 my-md-4 pt-md-2 border-top">
+            <div class="row">
+               <div class="col-12 col-md">
+                  <small class="d-block mb-3 text-muted">&copy; 2021 Expense Tracker </small>
+               </div>
+            </div>
+         </footer>
+      </div>
+      </div>
+   </body>
+</html>
