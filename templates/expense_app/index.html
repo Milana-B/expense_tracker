@@ -8,7 +8,7 @@
    {% csrf_token %}
 </form>
 {% if amount_sum %}
-   <p class="h4 pb-2">The monthly total expense is: {{ amount_sum }} NIS</p>
+   <p class="h4 pb-2">The monthly total expense is: {{ total_sum }} NIS</p>
 {% else %}
    <p class="h4 pb-2">The monthly total expense is: 0 NIS</p>
 {% endif %}
@@ -16,7 +16,7 @@
    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
       <div class="col p-4 d-flex flex-column position-static">
          <h3>Last Expenses:</h3>
-         {% if expense_record %}
+         {% if expense_record_list %}
          <table class="table table-success table-striped">
             <thead>
                <th>Date</th>
@@ -29,7 +29,7 @@
                <th>Update</th>
                <th>Remove</th>
             </thead>
-            {% for record in expense_record %}
+            {% for record in expense_record_list %}
             <tr>
                <td>{{ record.date }}</td>
                <td>{{ record.user.username }}</td>
