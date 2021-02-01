@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import PaymentMethod, ExpenseCategory, ExpenseRecord
-from .forms import NewExpenseForm, DateForm, NewPaymentMethodForm, NewExpenseCategoryForm, FilterDataForm, UserForm
+from .forms import ExpenseRecordForm, DateForm, PaymentMethodForm, ExpenseCategoryForm, FilterDataForm, UserForm
 import datetime
 import xlwt
 
@@ -19,7 +19,7 @@ import xlwt
 
 # ExpenseRecord Model - Create, Update and Delete
 class ExpenseRecordCreateView(LoginRequiredMixin, generic.CreateView):
-    form_class = NewExpenseForm
+    form_class = ExpenseRecordForm
     model = ExpenseRecord
 
     def get_form_kwargs(self):
@@ -33,7 +33,7 @@ class ExpenseRecordCreateView(LoginRequiredMixin, generic.CreateView):
 
 
 class ExpenseRecordUpdateView(LoginRequiredMixin, generic.UpdateView):
-    form_class = NewExpenseForm
+    form_class = ExpenseRecordForm
     model = ExpenseRecord
 
     def get_form_kwargs(self):
@@ -49,7 +49,7 @@ class ExpenseRecordDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 # PaymentMethod Model - Create, Update and Delete
 class PaymentMethodCreateView(LoginRequiredMixin, generic.CreateView):
-    form_class = NewPaymentMethodForm
+    form_class = PaymentMethodForm
     model = PaymentMethod
 
     def form_valid(self, form):
@@ -58,7 +58,7 @@ class PaymentMethodCreateView(LoginRequiredMixin, generic.CreateView):
 
 
 class PaymentMethodUpdateView(LoginRequiredMixin, generic.UpdateView):
-    form_class = NewPaymentMethodForm
+    form_class = PaymentMethodForm
     model = PaymentMethod
 
 
@@ -69,7 +69,7 @@ class PaymentMethodDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 # ExpenseCategory Model - Create, Update and Delete
 class ExpenseCategoryCreateView(LoginRequiredMixin, generic.CreateView):
-    form_class = NewExpenseCategoryForm
+    form_class = ExpenseCategoryForm
     model = ExpenseCategory
 
     def form_valid(self, form):
@@ -78,7 +78,7 @@ class ExpenseCategoryCreateView(LoginRequiredMixin, generic.CreateView):
 
 
 class ExpenseCategoryUpdateView(LoginRequiredMixin, generic.UpdateView):
-    form_class = NewExpenseCategoryForm
+    form_class = ExpenseCategoryForm
     model = ExpenseCategory
 
 
@@ -92,6 +92,7 @@ def index(request):
     months_dict = dict(January=1, February=2, March=3, April=4, May=5, June=6,
                        July=7, August=8, September=9, October=10, November=11, December=12)
 
+    # Get the current month and year
     now = datetime.datetime.now()
     month = now.month
     year = now.year
@@ -112,7 +113,7 @@ def index(request):
 
     expense_record_list = ExpenseRecord.objects.filter(date__month=month, date__year=year, user=user).order_by('date')
 
-    context_dict = {'amount_sum': total_sum, 'expense_record': expense_record_list, 'form': form}
+    context_dict = {'total_sum': total_sum, 'expense_record_list': expense_record_list, 'form': form}
 
     return render(request, 'expense_app/index.html', context=context_dict)
 
@@ -123,12 +124,12 @@ def preferences(request):
     payment_methods_list = PaymentMethod.objects.filter(user=user).order_by('name')
     expense_categories_list = ExpenseCategory.objects.filter(user=user).order_by('name')
 
-    expense_category_form = NewExpenseCategoryForm()
-    payment_method_form = NewPaymentMethodForm()
+    expense_category_form = ExpenseCategoryForm()
+    payment_method_form = PaymentMethodForm()
 
     if request.method == "POST":
         if 'save_method' in request.POST:
-            payment_method_form = NewPaymentMethodForm(request.POST)
+            payment_method_form = PaymentMethodForm(request.POST)
             if payment_method_form.is_valid():
                 payment_method_form.save(commit=False)
                 try:
@@ -140,7 +141,7 @@ def preferences(request):
             else:
                 print("ERROR FORM INVALID")
         if 'save_category' in request.POST:
-            expense_category_form = NewExpenseCategoryForm(request.POST)
+            expense_category_form = ExpenseCategoryForm(request.POST)
             if expense_category_form.is_valid():
                 expense_category_form.save(commit=False)
                 try:
@@ -163,6 +164,7 @@ def filter(request):
     months_dict = dict(January=1, February=2, March=3, April=4, May=5, June=6,
                        July=7, August=8, September=9, October=10, November=11, December=12)
 
+    # Get the current month and year
     now = datetime.datetime.now()
     month = now.month
     year = now.year
@@ -285,27 +287,24 @@ def register(request):
         user_form = UserForm()
 
     # This is the render and context dictionary to feed
-    # back to the registration.html file page.
+    # back to the registration.html file page
     return render(request, 'expense_app/registration.html', {'user_form': user_form, 'registered': registered})
 
 
 def user_login(request):
     if request.method == 'POST':
-        # First get the username and password supplied
         username = request.POST.get('username')
         password = request.POST.get('password')
 
         # Django's built-in authentication function:
         user = authenticate(username=username, password=password)
 
-        # If we have a user
         if user:
             # Check it the account is active
             if user.is_active:
-                # Log the user in.
+                # Log the user in
                 login(request, user)
-                # Send the user back to some page.
-                # In this case their homepage.
+                # Send the user back to homepage
                 return HttpResponseRedirect(reverse('index'))
             else:
                 # If account is not active:
@@ -316,5 +315,5 @@ def user_login(request):
             return HttpResponse("Invalid login details supplied.")
 
     else:
-        # Nothing has been provided for username or password.
+        # Nothing has been provided for username or password
         return render(request, 'expense_app/login.html', {})
