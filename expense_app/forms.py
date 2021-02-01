@@ -38,12 +38,12 @@ class DateForm(forms.Form):
                              widget=forms.Select(attrs={'onChange': 'submit();'}))
 
 
-class NewExpenseForm(forms.ModelForm):
+class ExpenseRecordForm(forms.ModelForm):
     date = forms.DateField(widget=forms.SelectDateWidget(), initial=datetime.date.today)
 
     def __init__(self,*args,**kwargs):
         user = kwargs.pop('user')
-        super(NewExpenseForm,self).__init__(*args,**kwargs)
+        super(ExpenseRecordForm, self).__init__(*args, **kwargs)
         self.fields['payment_method'].queryset = PaymentMethod.objects.filter(user=user)
         self.fields['expense_category'].queryset = ExpenseCategory.objects.filter(user=user)
 
@@ -52,16 +52,17 @@ class NewExpenseForm(forms.ModelForm):
         fields = ['date', 'amount', 'payments', 'payment_method', 'expense_category', 'note']
 
 
-class NewPaymentMethodForm(forms.ModelForm):
+class PaymentMethodForm(forms.ModelForm):
     class Meta():
         model = PaymentMethod
         fields = ['name']
 
 
-class NewExpenseCategoryForm(forms.ModelForm):
+class ExpenseCategoryForm(forms.ModelForm):
     class Meta():
         model = ExpenseCategory
         fields = ['name']
+
 
 class FilterDataForm(forms.Form):
     months = [('January', 'January'),
