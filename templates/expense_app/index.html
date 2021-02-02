@@ -7,7 +7,7 @@
    {{form.as_p}}
    {% csrf_token %}
 </form>
-{% if amount_sum %}
+{% if total_sum %}
    <p class="h4 pb-2">The monthly total expense is: {{ total_sum }} NIS</p>
 {% else %}
    <p class="h4 pb-2">The monthly total expense is: 0 NIS</p>
