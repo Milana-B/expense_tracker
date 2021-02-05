@@ -4,15 +4,7 @@ from .models import ExpenseRecord, PaymentMethod, ExpenseCategory
 import datetime
 
 
-class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-
-    class Meta():
-        model = User
-        fields = ['username', 'email', 'password']
-
-
-class DateForm(forms.Form):
+def get_months():
     months = [('January', 'January'),
               ('February', 'February'),
               ('March', 'March'),
@@ -26,7 +18,26 @@ class DateForm(forms.Form):
               ('November', 'November'),
               ('December', 'December')]
 
+    return months
+
+
+def get_years():
     years = [(str(i), i) for i in range(2020, 2030)]
+
+    return years
+
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta():
+        model = User
+        fields = ['username', 'email', 'password']
+
+
+class DateForm(forms.Form):
+    months = get_months()
+    years = get_years()
 
     now = datetime.datetime.now()
     month = now.month
@@ -39,7 +50,8 @@ class DateForm(forms.Form):
 
 
 class ExpenseRecordForm(forms.ModelForm):
-    date = forms.DateField(widget=forms.SelectDateWidget(), initial=datetime.date.today)
+    years = [i for i in range(2020, 2030)]
+    date = forms.DateField(widget=forms.SelectDateWidget(years=years), initial=datetime.date.today)
 
     def __init__(self,*args,**kwargs):
         user = kwargs.pop('user')
@@ -65,20 +77,8 @@ class ExpenseCategoryForm(forms.ModelForm):
 
 
 class FilterDataForm(forms.Form):
-    months = [('January', 'January'),
-              ('February', 'February'),
-              ('March', 'March'),
-              ('April', 'April'),
-              ('May', 'May'),
-              ('June', 'June'),
-              ('July', 'July'),
-              ('August', 'August'),
-              ('September', 'September'),
-              ('October', 'October'),
-              ('November', 'November'),
-              ('December', 'December')]
-
-    years = [(str(i), i) for i in range(2020, 2030)]
+    months = get_months()
+    years = get_years()
 
     now = datetime.datetime.now()
     month = now.month
