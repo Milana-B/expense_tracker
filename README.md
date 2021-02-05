@@ -26,3 +26,12 @@ Run the Expense app on your local computer:
     python manage.py runserver
   
 5. In your browser, go to http://localhost:8000
+
+
+To start working:
+
+1. Register to the app
+
+2. Define your personal preferences on the "Preferences" tab
+
+3. Add your expenses on the "New expense" tab
