@@ -265,7 +265,6 @@ def register(request):
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
 
-        # Check to see both forms are valid
         if user_form.is_valid():
             # Save User Form to Database
             user = user_form.save()
