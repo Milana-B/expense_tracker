@@ -9,15 +9,19 @@ Your ongoing expenses are recorded by date and are easily being tracking by the 
 ### Application link
 http://milanab.pythonanywhere.com/
 
-#### Run the Expense application on your local computer:
+### Run the Expense application on your local computer:
 
-### Prerequisites
+#### Prerequisites
 1. Download the App to a local directory
-2. Set up a Python development environment, including Python, pip, and virtualenv:  
-`virtualenv env source env/bin/activate pip install -r requirements.txt`
-3. Run the Django migrations to set up your models:   
+2. Set up a Python development environment, including Python, pip, and virtualenv:
 ```
-python manage.py makemigrations 
+python -m venv env
+.\env\Scripts\activate
+pip install -r requirements.txt
+```
+3. Run the Django migrations to set up your models:
+```
+python manage.py migrate 
 python manage.py makemigrations expense_app 
 python manage.py migrate
 ```
