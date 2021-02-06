@@ -26,7 +26,10 @@ python manage.py makemigrations expense_app
 python manage.py migrate
 ```
 4. Start a local web server:  
-`python manage.py runserver`
+```
+python manage.py runserver
+```
+
 5. In your browser, go to http://localhost:8000
 
 ### High level flow
